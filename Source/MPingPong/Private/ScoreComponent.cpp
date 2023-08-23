@@ -3,6 +3,8 @@
 
 #include "ScoreComponent.h"
 
+#include "PBoardPlayer.h"
+#include "PScore_Widget.h"
 #include "Net/UnrealNetwork.h"
 
 // Sets default values for this component's properties
@@ -27,7 +29,7 @@ int UScoreComponent::GetScore() const
 }
 
 
-bool UScoreComponent::ApplyGoal(int Delta)
+bool UScoreComponent::ApplyGoal(int32 Delta)
 {
 	int OldScore = PlayerScore;
 	int NewScore = PlayerScore + Delta;
@@ -42,13 +44,38 @@ bool UScoreComponent::ApplyGoal(int Delta)
 		{
 			MulticastScoreChanged(NewScore, ActualDelta);
 		}
+
+		OnRep_PlayerScore();
 	}
 
 	return ActualDelta != 0;
 }
 
 
-void UScoreComponent::MulticastScoreChanged_Implementation(int NewScore, int Delta)
+void UScoreComponent::OnRep_PlayerScore()
+{
+	APBoardPlayer* BoardPlayer = Cast<APBoardPlayer>(GetOwner());
+	UPScore_Widget* ScoreWidget = BoardPlayer->GetScoreWidget();
+	FString ScoreText = FString::FromInt(PlayerScore);
+
+	if (BoardPlayer->GetPlayerId().Equals(FString("Player 1")))
+	{
+		if (ensure(ScoreWidget))
+		{
+			ScoreWidget->SetTextFisrtPlayer(ScoreText);
+		}
+	}
+	else if (BoardPlayer->GetPlayerId().Equals(FString("Player 2")))
+	{
+		if (ensure(ScoreWidget))
+		{
+			ScoreWidget->SetTextSecondPlayer(ScoreText);
+		}
+	}
+}
+
+
+void UScoreComponent::MulticastScoreChanged_Implementation(int32 NewScore, int32 Delta)
 {
 	OnScoreChanged.Broadcast(this, NewScore, Delta);
 }

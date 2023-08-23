@@ -7,6 +7,7 @@
 #include "PBoardPlayer.generated.h"
 
 
+class UPScore_Widget;
 class UScoreComponent;
 class UCameraComponent;
 class USpringArmComponent;
@@ -19,11 +20,19 @@ class MPINGPONG_API APBoardPlayer : public APawn
 	GENERATED_BODY()
 
 public:
-	// Sets default values for this pawn's properties
+	
 	APBoardPlayer();
 
 protected:
+	
+	static int32 NextPlayerNumber;
 
+	UPROPERTY(EditDefaultsOnly, Category = "UI")
+	TSubclassOf<UPScore_Widget> ScoreWidgetClass;
+
+	UPROPERTY(EditDefaultsOnly, Category = "UI")
+	UPScore_Widget* ScoreWidget;
+	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Components")
 	UBoxComponent* BoxComp;
 
@@ -44,6 +53,15 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Movement")
 	float Speed;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	FString PlayerId;
+	
+	UPROPERTY(ReplicatedUsing = "OnRep_PlayerNumber")
+	int32 PlayerNumber;
+
+	UFUNCTION()
+	void OnRep_PlayerNumber();
 	
 	UFUNCTION()
 	void OnRep_NewLocation();
@@ -51,12 +69,11 @@ protected:
 	virtual void PostInitializeComponents() override;
 
 	UFUNCTION()
-	void OnScoreChanged(UScoreComponent* OwningComp, int NewScore, int Delta);
+	void OnScoreChanged(UScoreComponent* OwningComp, int32 NewScore, int32 Delta);
 	
 public:
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "ServerId")
-	FString PlayerId;
+	FString GetPlayerId() const;
 	
 	virtual void BeginPlay() override;
 
@@ -68,6 +85,11 @@ public:
 	void MoveRight(float Value);
 
 	virtual void PossessedBy(AController* NewController) override;
+
+	UPScore_Widget* GetScoreWidget() const
+	{
+		return ScoreWidget;
+	}
 
 	float GetSpeed() const
 	{

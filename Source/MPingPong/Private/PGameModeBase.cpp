@@ -4,7 +4,7 @@
 
 
 APGameModeBase::APGameModeBase()
-	: ScorePlayerFirst(), ScorePlayerSecond(), BallSpawn_Delay(5.0f)
+	: BallSpawn_Delay(5.0f)
 {}
 
 
@@ -27,17 +27,6 @@ void APGameModeBase::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
 	
-}
-
-
-void APGameModeBase::IncreaseScore(FString PlayerId)
-{
-	if (PlayerId.Equals(FString("Player 1"))) {
-		ScorePlayerFirst += 1;
-	}
-	else if(PlayerId.Equals(FString("Player 2"))) {
-		ScorePlayerSecond += 1;
-	}
 }
 
 

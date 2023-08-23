@@ -16,12 +16,6 @@ class MPINGPONG_API APPlayerController : public APlayerController
 
 protected:
 
-	UPROPERTY(EditDefaultsOnly, Category = "UI")
-	TSubclassOf<UUserWidget> ScoreWidgetClass;
-
-	UPROPERTY(EditDefaultsOnly, Category = "UI")
-	UUserWidget* ScoreWidget;
-
 	UFUNCTION(BlueprintCallable)
 	void MovePawnRight(float Value);
 

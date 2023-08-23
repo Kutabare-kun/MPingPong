@@ -7,11 +7,15 @@
 #include "EngineUtils.h"
 #include "PGateActor.h"
 #include "ScoreComponent.h"
+#include "PScore_Widget.h"
+#include "Blueprint/UserWidget.h"
 #include "Camera/CameraComponent.h"
 #include "Components/BoxComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "MPingPong/MPingPong.h"
 #include "Net/UnrealNetwork.h"
+
+int32 APBoardPlayer::NextPlayerNumber = 1;
 
 // Sets default values
 APBoardPlayer::APBoardPlayer()
@@ -45,7 +49,7 @@ void APBoardPlayer::PostInitializeComponents()
 }
 
 
-void APBoardPlayer::OnScoreChanged(UScoreComponent* OwningComp, int NewScore, int Delta)
+void APBoardPlayer::OnScoreChanged(UScoreComponent* OwningComp, int32 NewScore, int32 Delta)
 {
 	if (Delta < 0.0f)
 	{
@@ -54,15 +58,21 @@ void APBoardPlayer::OnScoreChanged(UScoreComponent* OwningComp, int NewScore, in
 }
 
 
+FString APBoardPlayer::GetPlayerId() const
+{
+	return PlayerId;
+}
+
+
 void APBoardPlayer::BeginPlay()
 {
 	Super::BeginPlay();
 
-	if (GetController() == GetWorld()->GetFirstPlayerController()) {
-		PlayerId = FString("Player 1");
-	}
-	else {
-		PlayerId = FString("Player 2");
+	if (HasAuthority())
+	{
+		PlayerNumber = NextPlayerNumber++;
+		
+		OnRep_PlayerNumber();
 	}
 
 	float MinDistance = FLT_MAX;
@@ -116,7 +126,16 @@ void APBoardPlayer::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	FString Msg = FString::Printf(TEXT("%s, Score: %d"), *PlayerId, ScoreComp->GetScore());
+	if (ScoreWidgetClass && ScoreWidget == nullptr)
+	{
+		ScoreWidget = CreateWidget<UPScore_Widget>(GetWorld(), ScoreWidgetClass);
+		ScoreWidget->AddToViewport();
+	}
+
+	FString Msg = FString::Printf(TEXT("Widget: %s"), *GetNameSafe(ScoreWidget));
+	LogOnScreen(this, Msg, FColor::Orange, 0);
+	
+	Msg = FString::Printf(TEXT("%s, Score: %d"), *PlayerId, ScoreComp->GetScore());
 	LogOnScreen(this, Msg, FColor::Orange, 0);
 }
 
@@ -143,6 +162,19 @@ void APBoardPlayer::Server_MoveRight_Implementation(float Value)
 	}
 }
 
+
+void APBoardPlayer::OnRep_PlayerNumber()
+{
+	if (PlayerNumber == 1)
+	{
+		PlayerId = FString("Player 1");
+	}
+	else if (PlayerNumber == 2)
+	{
+		PlayerId = FString("Player 2");
+	}
+}
+
 // Server: Must be use function in body where variable(NewLocation) is changed
 // Client: Automatic use this function when variable(NewLocation) is changed
 void APBoardPlayer::OnRep_NewLocation()
@@ -156,6 +188,7 @@ void APBoardPlayer::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLif
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
 	DOREPLIFETIME(APBoardPlayer, NewLocation);
+	DOREPLIFETIME(APBoardPlayer, PlayerNumber);
 }
 
 

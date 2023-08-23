@@ -7,7 +7,7 @@
 #include "ScoreComponent.generated.h"
 
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnScoreChanged, UScoreComponent*, OwningComp, int, NewValue, int, Delta);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnScoreChanged, UScoreComponent*, OwningComp, int32, NewValue, int32, Delta);
 
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
@@ -23,15 +23,18 @@ public:
 
 protected:
 
-	UPROPERTY(EditDefaultsOnly, Replicated, Category = "Player|Score")
-	int PlayerScore;
+	UPROPERTY(EditDefaultsOnly, ReplicatedUsing = "OnRep_PlayerScore", Category = "Player|Score")
+	int32 PlayerScore;
+
+	UFUNCTION()
+	void OnRep_PlayerScore();
 	
 	virtual void BeginPlay() override;
 
 public:
 
 	UFUNCTION(NetMulticast, Reliable)
-	void MulticastScoreChanged(int NewScore, int Delta);
+	void MulticastScoreChanged(int32 NewScore, int32 Delta);
 	
 	UPROPERTY(BlueprintAssignable, Category = "Attributes")
 	FOnScoreChanged OnScoreChanged;
@@ -40,6 +43,6 @@ public:
 	int GetScore() const;
 
 	UFUNCTION(BlueprintCallable, Category = "Attributes")
-	bool ApplyGoal(int Delta);
+	bool ApplyGoal(int32 Delta);
 	
 };

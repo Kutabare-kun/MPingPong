@@ -1,7 +1,6 @@
 #include "PPlayerController.h"
 
 #include "PBoardPlayer.h"
-#include "Blueprint/UserWidget.h"
 #include "GameFramework/GameStateBase.h"
 #include "../MPingPong.h"
 
@@ -22,12 +21,7 @@ void APPlayerController::SetupInputComponent()
 void APPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
-
-	if (ScoreWidgetClass && ScoreWidget == nullptr)
-	{
-		ScoreWidget = CreateWidget<UUserWidget>(GetWorld(), ScoreWidgetClass);
-		ScoreWidget->AddToViewport();
-	}
+	
 }
 
 

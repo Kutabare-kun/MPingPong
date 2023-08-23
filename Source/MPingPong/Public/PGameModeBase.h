@@ -15,9 +15,6 @@ class MPINGPONG_API APGameModeBase : public AGameModeBase
 
 protected:
 
-	int ScorePlayerFirst;
-	int ScorePlayerSecond;
-
 	UPROPERTY(EditDefaultsOnly, Category = "Ball|Transform")
 	FVector BallLocation;
 
@@ -45,6 +42,6 @@ public:
 
 	virtual void Tick(float DeltaSeconds) override;
 
-	void IncreaseScore(FString PlayerId);
+	// void IncreaseScore(FString PlayerId);
 	
 };

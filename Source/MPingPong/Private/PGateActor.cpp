@@ -28,17 +28,7 @@ void APGateActor::BeginPlay()
 void APGateActor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
-	if (Player)
-	{
-		FString Msg = FString::Printf(TEXT("Actor: %s, Owner: %s"), *GetNameSafe(this), *Cast<APBoardPlayer>(Player)->PlayerId);
-		LogOnScreen(this, Msg, FColor::Blue, 0);
-	}
-	else
-	{
-		FString Msg = FString::Printf(TEXT("Actor: %s, Owner: None"), *GetNameSafe(this));
-		LogOnScreen(this, Msg, FColor::Blue, 0);
-	}
+	
 }
 
 
