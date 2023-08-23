@@ -10,6 +10,7 @@
 #include "Camera/CameraComponent.h"
 #include "Components/BoxComponent.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "MPingPong/MPingPong.h"
 #include "Net/UnrealNetwork.h"
 
 // Sets default values
@@ -115,6 +116,8 @@ void APBoardPlayer::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	FString Msg = FString::Printf(TEXT("%s, Score: %d"), *PlayerId, ScoreComp->GetScore());
+	LogOnScreen(this, Msg, FColor::Orange, 0);
 }
 
 

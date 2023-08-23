@@ -3,9 +3,13 @@
 
 #include "PBallActor.h"
 
+#include "PBoardPlayer.h"
+#include "PGameModeBase.h"
 #include "../MPingPong.h"
 #include "PGateActor.h"
+#include "ScoreComponent.h"
 #include "Components/SphereComponent.h"
+#include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Net/UnrealNetwork.h"
 
@@ -22,6 +26,8 @@ APBallActor::APBallActor()
 	MeshComp->SetupAttachment(RootComponent);
 
 	Speed = 600.0f;
+
+	GoalScore = 1;
 
 	SetReplicates(true);
 }
@@ -60,7 +66,29 @@ void APBallActor::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, U
 		
 	if (Gate)
 	{
-		// TODO: Logic where gate is collided with Gate
+		UScoreComponent* ScoreComp = UScoreComponent::GetScoreComponent(Gate->GetOwnerGate());
+		if (ScoreComp)
+		{
+			ScoreComp->ApplyGoal(GoalScore);
+
+			APGameModeBase* GM = Cast<APGameModeBase>(UGameplayStatics::GetGameMode(GetWorld()));
+			if (GM)
+			{
+				// Inverting Rotation				
+				FRotator BallRotation = (GetActorForwardVector() * -1).Rotation();
+
+				Destroy();
+
+				FTimerHandle SpawnNewBall;
+				float SpawnNewBall_Delay{5.0f};
+
+				// Spawn new ball after destroying with 5 second delay
+				GetWorld()->GetTimerManager().SetTimer(SpawnNewBall, [GM, BallRotation]()
+				{
+					GM->SpawnGameBall(GM->GetBallSpawnLocation(), BallRotation);
+				}, SpawnNewBall_Delay, false);
+			}
+		}
 	}
 	else 
 	{

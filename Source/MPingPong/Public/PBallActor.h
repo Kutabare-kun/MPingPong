@@ -29,6 +29,9 @@ protected:
 	UPROPERTY(ReplicatedUsing = "OnRep_BallLocation")
 	FVector BallLocation;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Score")
+	int GoalScore;
+
 	UFUNCTION()
 	void OnRep_BallLocation();
 

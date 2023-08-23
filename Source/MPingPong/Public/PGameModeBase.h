@@ -32,12 +32,14 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Ball|Timer")
 	float BallSpawn_Delay;
 
-	UFUNCTION()
-	void SpawnGameBall(FVector Location, FRotator Rotator);
-
 public:
 	
 	APGameModeBase();
+
+	UFUNCTION()
+	void SpawnGameBall(FVector Location, FRotator Rotator);
+
+	FVector GetBallSpawnLocation() const;
 
 	virtual void PostLogin(APlayerController* NewPlayer) override;
 

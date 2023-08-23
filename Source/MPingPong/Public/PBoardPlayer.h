@@ -55,7 +55,7 @@ protected:
 	
 public:
 
-	UPROPERTY(BlueprintReadOnly, Category = "ServerId")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "ServerId")
 	FString PlayerId;
 	
 	virtual void BeginPlay() override;
