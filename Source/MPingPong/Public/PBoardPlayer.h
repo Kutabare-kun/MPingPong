@@ -28,10 +28,10 @@ protected:
 	static int32 NextPlayerNumber;
 
 	UPROPERTY(EditDefaultsOnly, Category = "UI")
-	TSubclassOf<UPScore_Widget> ScoreWidgetClass;
+	TSubclassOf<UPScore_Widget> PScoreWidgetClass;
 
 	UPROPERTY(EditDefaultsOnly, Category = "UI")
-	UPScore_Widget* ScoreWidget;
+	UPScore_Widget* PScoreWidget;
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Components")
 	UBoxComponent* BoxComp;
@@ -88,7 +88,7 @@ public:
 
 	UPScore_Widget* GetScoreWidget() const
 	{
-		return ScoreWidget;
+		return PScoreWidget;
 	}
 
 	float GetSpeed() const

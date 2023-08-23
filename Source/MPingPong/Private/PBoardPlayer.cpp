@@ -108,6 +108,12 @@ void APBoardPlayer::BeginPlay()
 			Gate->Multicast_OwnerPlayer(this);
 		}
 	}
+
+	if (PScoreWidgetClass && PScoreWidget == nullptr)
+	{
+		PScoreWidget = CreateWidget<UPScore_Widget>(GetWorld(), PScoreWidgetClass);
+		PScoreWidget->AddToViewport();
+	}
 }
 
 
@@ -125,17 +131,8 @@ void APBoardPlayer::PossessedBy(AController* NewController)
 void APBoardPlayer::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
-	if (ScoreWidgetClass && ScoreWidget == nullptr)
-	{
-		ScoreWidget = CreateWidget<UPScore_Widget>(GetWorld(), ScoreWidgetClass);
-		ScoreWidget->AddToViewport();
-	}
-
-	FString Msg = FString::Printf(TEXT("Widget: %s"), *GetNameSafe(ScoreWidget));
-	LogOnScreen(this, Msg, FColor::Orange, 0);
-	
-	Msg = FString::Printf(TEXT("%s, Score: %d"), *PlayerId, ScoreComp->GetScore());
+		
+	FString Msg = FString::Printf(TEXT("%s, Score: %d"), *PlayerId, ScoreComp->GetScore());
 	LogOnScreen(this, Msg, FColor::Orange, 0);
 }
 

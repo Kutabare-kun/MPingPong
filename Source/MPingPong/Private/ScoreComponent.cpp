@@ -60,14 +60,14 @@ void UScoreComponent::OnRep_PlayerScore()
 
 	if (BoardPlayer->GetPlayerId().Equals(FString("Player 1")))
 	{
-		if (ensure(ScoreWidget))
+		if (ScoreWidget)
 		{
 			ScoreWidget->SetTextFisrtPlayer(ScoreText);
 		}
 	}
 	else if (BoardPlayer->GetPlayerId().Equals(FString("Player 2")))
 	{
-		if (ensure(ScoreWidget))
+		if (ScoreWidget)
 		{
 			ScoreWidget->SetTextSecondPlayer(ScoreText);
 		}

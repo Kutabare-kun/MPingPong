@@ -60,9 +60,6 @@ void APBallActor::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, U
 	FVector NormalImpulse, const FHitResult& Hit)
 {
 	APGateActor* Gate = Cast<APGateActor>(OtherActor);
-
-	FString Msg = FString::Printf(TEXT("Collided with: %s"), *GetNameSafe(OtherActor));
-	LogOnScreen(this, Msg, FColor::Green, 10);
 		
 	if (Gate)
 	{
