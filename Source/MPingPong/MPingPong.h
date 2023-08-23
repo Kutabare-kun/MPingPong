@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 
 
+// Function which can tell you where operation is doing on Server or Client
 static void LogOnScreen(UObject* WorldContext, FString Msg, FColor Color = FColor::White, float Duration = 5.0f)
 {
 	if (!ensure(WorldContext))
